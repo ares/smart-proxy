@@ -12,6 +12,7 @@
 #:trusted_hosts:
 #- foreman.prod.domain
 #- foreman.dev.domain
+#:foreman_url: http://127.0.0.1:3000
 
 # enable the daemon to run in the background
 :daemon: true
@@ -84,6 +85,10 @@
 
 # Which user to invoke sudo as to run puppet commands
 #:puppet_user: root
+
+# enable Chef management
+:chefproxy: false
+
 
 # enable BMC management  (Bare metal power and bios controls)
 # Available providers:
