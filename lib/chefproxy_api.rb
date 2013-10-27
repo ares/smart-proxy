@@ -1,6 +1,6 @@
 require 'proxy/chefproxy'
 require 'chef'
-require 'digest/sha1'
+require 'digest/sha2'
 require 'base64'
 
 
@@ -14,11 +14,10 @@ class SmartProxy
       key = SETTINGS.smartproxy_privatekey
 
       rest = Chef::REST.new(chefurl,client_name,key)
-      puts "signature is #{signature}"
       public_key = OpenSSL::PKey::RSA.new(rest.get_rest("/clients/#{client_name}").public_key)
       #signature is base64 encoded
       decoded_signature = Base64.decode64(signature)
-      hash_body = Digest::SHA1.hexdigest(body)
+      hash_body = Digest::SHA256.hexdigest(body)
       public_key.verify(OpenSSL::Digest::SHA256.new,decoded_signature,hash_body)
   end
 
