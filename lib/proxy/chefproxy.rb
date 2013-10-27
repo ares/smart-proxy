@@ -11,13 +11,13 @@ def foreman_request(path, body)
 
   if http.use_ssl?
     if SETTINGS.foreman_ssl_ca && !SETTINGS.foreman_ssl_ca.to_s..empty?
-      http.ca_file     = options[:foreman_ssl_ca]
+      http.ca_file     = SETTINGS.foreman_ssl_ca
       http.verify_mode = OpenSSL::SSL::VERIFY_PEER
     end
 
     if SETTINGS.foreman_ssl_cert && !SETTINGS.foreman_ssl_cert.to_s.empty? && SETTINGS.foreman_ssl_key && !SETTINGS.foreman_ssl_key.to_s.empty?
-      http.cert = OpenSSL::X509::Certificate.new(File.read(options[:foreman_ssl_cert]))
-      http.key  = OpenSSL::PKey::RSA.new(File.read(options[:foreman_ssl_key]), nil)
+      http.cert = OpenSSL::X509::Certificate.new(File.read(SETTINGS.foreman_ssl_cert))
+      http.key  = OpenSSL::PKey::RSA.new(File.read(SETTINGS.foreman_ssl_key), nil)
     end
   end
 
