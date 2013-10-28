@@ -3,7 +3,6 @@ require 'chef'
 require 'digest/sha2'
 require 'base64'
 
-
 class SmartProxy
 
   def verify_signature_request(client_name,signature,body)
