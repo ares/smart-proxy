@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 #Chef have a strong requirement on json version
-gem 'json', '= 1.7.7'
+gem 'json'
 gem 'sinatra', '< 1.4.3'
 
 Dir["#{File.dirname(__FILE__)}/bundler.d/*.rb"].each do |bundle|

@@ -1,3 +1,3 @@
 group :chef do
-  gem 'chef'
+  gem 'chef', ">= 11.6.2"
 end
