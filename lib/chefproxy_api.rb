@@ -20,32 +20,29 @@ class SmartProxy
       public_key.verify(OpenSSL::Digest::SHA256.new,decoded_signature,hash_body)
   end
 
-  post "/facts" do
-
+  def authenticated(&block)
       client_name = request.env['HTTP_X_FOREMAN_CLIENT']
       signature   = request.env['HTTP_X_FOREMAN_SIGNATURE']
-      facts       = request.env["rack.input"].read
+      content     = request.env["rack.input"].read
 
       auth = true
-      auth = verify_signature_request(client_name,signature,facts) if SETTINGS.authenticate_nodes
+      auth = verify_signature_request(client_name,signature,content) if SETTINGS.authenticate_nodes
       if auth
-        Proxy::Chefproxy::Facts.post_facts(facts)
+        block.call(content)
       else
        log_halt 401, "Failed to authenticate node"
       end
   end
 
-  post "/reports" do
-      client_name = request.env['HTTP_X_FOREMAN_CLIENT']
-      signature   = request.env['HTTP_X_FOREMAN_SIGNATURE']
-      report = request.env["rack.input"].read
+  post "/facts" do
+    authenticated do |content|
+        Proxy::ChefProxy::Facts.new.post_facts(content)
+    end
+  end
 
-      auth = true
-      auth = verify_signature_request(client_name,signature,report) if SETTINGS.authenticate_nodes
-      if auth
-        Proxy::Chefproxy::Reports.post_report(report)
-      else
-       log_halt 401, "Failed to authenticate node"
+  post "/reports" do
+      authenticated do |content|
+        Proxy::ChefProxy::Reports.new.post_report(content)
       end
   end
 end
