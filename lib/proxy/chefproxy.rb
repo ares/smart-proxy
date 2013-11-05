@@ -14,7 +14,7 @@ module Proxy::ChefProxy
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
       if http.use_ssl?
-        if SETTINGS.foreman_ssl_ca && !SETTINGS.foreman_ssl_ca.to_s..empty?
+        if SETTINGS.foreman_ssl_ca && !SETTINGS.foreman_ssl_ca.to_s.empty?
           http.ca_file     = SETTINGS.foreman_ssl_ca
           http.verify_mode = OpenSSL::SSL::VERIFY_PEER
         end
