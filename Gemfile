@@ -1,6 +1,5 @@
 source 'http://rubygems.org'
 
-#Chef have a strong requirement on json version
 gem 'json'
 gem 'sinatra', '< 1.4.3'
 
