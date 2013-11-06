@@ -1,5 +1,4 @@
 module Proxy
-  MODULES = %w{dns dhcp tftp puppetca puppet bmc}
   MODULES = %w{dns dhcp tftp puppetca puppet bmc chefproxy}
   VERSION = "1.3-develop"
 
