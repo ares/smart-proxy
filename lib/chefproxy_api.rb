@@ -7,8 +7,8 @@ class SmartProxy
       Proxy::Authentication::Chef.new.authenticated(request) do |content|
           Proxy::ChefProxy::Facts.new.post_facts(content)
       end
-    rescue => e
-      log_halt(e.message[/^\d+/].to_i , e.message[/\D+/])
+    rescue Proxy::Error::Error400, Proxy::Error::Error401 => e
+      handle_error(e)
     end
   end
 
@@ -17,8 +17,8 @@ class SmartProxy
       Proxy::Authentication::Chef.new.authenticated(request) do |content|
         Proxy::ChefProxy::Reports.new.post_report(content)
       end
-    rescue => e
-      log_halt(e.message[/^\d+/].to_i , e.message[/\D+/])
+    rescue Proxy::Error::Error400, Proxy::Error::Error401 => e
+      handle_error(e)
     end
   end
 end

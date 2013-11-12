@@ -5,6 +5,7 @@ module Proxy::Authentication
     require 'base64'
     require 'openssl'
     require 'helpers'
+    require 'proxy/error'
 
     def verify_signature_request(client_name,signature,body)
         #We need to retrieve node public key
@@ -16,9 +17,12 @@ module Proxy::Authentication
         rest = ::Chef::REST.new(chefurl,client_name,key)
         begin
           public_key = OpenSSL::PKey::RSA.new(rest.get_rest("/clients/#{client_name}").public_key)
-        rescue
-          return false
+        rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError,
+               Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError,
+               Errno::ECONNREFUSED, OpenSSL::SSL::SSLError => e
+          raise Proxy::Error::Error401, "Failed to authenticate node : "+e.message
         end
+
         #signature is base64 encoded
         decoded_signature = Base64.decode64(signature)
         hash_body = Digest::SHA256.hexdigest(body)
@@ -32,15 +36,16 @@ module Proxy::Authentication
         if SETTINGS.authenticate_nodes
           client_name = request.env['HTTP_X_FOREMAN_CLIENT']
           signature   = request.env['HTTP_X_FOREMAN_SIGNATURE']
-          raise "401 Failed to authenticate node. Missing some headers" if client_name.nil? or signature.nil?
+
+          raise Proxy::Error::Error401, "Failed to authenticate node. Missing some headers" if client_name.nil? or signature.nil?
           auth = verify_signature_request(client_name,signature,content)
         end
 
         if auth
-          raise "400 Body is empty" if content.nil?
+          raise Proxy::Error::Error400, "Body is empty" if content.nil?
           block.call(content)
         else
-          raise "401 Failed to authenticate node"
+          raise Proxy::Error::Error401, "Failed to authenticate node"
         end
     end
   end

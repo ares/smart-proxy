@@ -63,8 +63,8 @@ class AuthenticationChefTest < Test::Unit::TestCase
       result = @chefauth.authenticated(request) do |content|
         true
       end
-    rescue => e
-      assert_equal('401',e.message[/^\d+/])
+    rescue Proxy::Error::Error401 => e
+      assert(e.is_a? Proxy::Error::Error401)
     end
       assert_equal(nil,result)
   end
