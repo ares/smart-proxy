@@ -11,7 +11,7 @@ class ChefProxyTest < Test::Unit::TestCase
 
   def test_post_facts
     facts = {'fact' => "sample"}
-    stub_request(:post,@foreman_url+'//api/hosts/facts')
+    stub_request(:post,@foreman_url+'/api/hosts/facts')
     result = Proxy::ChefProxy::Facts.new.post_facts(facts) 
 
     assert(result.is_a? Net::HTTPOK)
@@ -19,7 +19,7 @@ class ChefProxyTest < Test::Unit::TestCase
   
   def test_post_reports
     report = {'report' => "sample"}
-    stub_request(:post,@foreman_url+'//api/reports')
+    stub_request(:post,@foreman_url+'/api/reports')
     result = Proxy::ChefProxy::Reports.new.post_report(report) 
 
     assert(result.is_a? Net::HTTPOK)
