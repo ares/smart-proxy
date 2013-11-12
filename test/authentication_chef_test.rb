@@ -44,7 +44,7 @@ class AuthenticationChefTest < Test::Unit::TestCase
     assert_equal(false,@chefauth.verify_signature_request('testnode1',@signature,@mybody), "Signing and checking with different keys should not pass")
   end
 
-  def test_auth_disabled_should_always_sucess
+  def test_auth_disabled_should_always_success
     SETTINGS.stubs(:authenticate_nodes).returns(false)
     s = StringIO.new('Hello')
     request = Sinatra::Request.new(env={'rack.input' => s})
