@@ -21,11 +21,4 @@ class SmartProxy < Sinatra::Base
     end
   end
 
-  def handle_error(error)
-    if error.instance_of? Proxy::Error::Error400
-    log_halt(400, "Bad request : "+error.message )
-    elsif error.instance_of? Proxy::Error::Error401
-      log_halt(401, "Unauthorized : "+error.message )
-    end
-  end
 end
